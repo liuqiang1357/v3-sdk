@@ -1,4 +1,4 @@
-import JSBI from 'jsbi'
+import bigInt from 'big-integer'
 import { PositionLibrary } from '.'
 import { ZERO } from '../internalConstants'
 
@@ -14,12 +14,12 @@ describe('PositionLibrary', () => {
       const [tokensOwed0, tokensOwed1] = PositionLibrary.getTokensOwed(
         ZERO,
         ZERO,
-        JSBI.BigInt(1),
-        JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(128)),
-        JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(128))
+        bigInt(1),
+        bigInt(2).pow(bigInt(128)),
+        bigInt(2).pow(bigInt(128))
       )
-      expect(tokensOwed0).toEqual(JSBI.BigInt(1))
-      expect(tokensOwed1).toEqual(JSBI.BigInt(1))
+      expect(tokensOwed0).toEqual(bigInt(1))
+      expect(tokensOwed1).toEqual(bigInt(1))
     })
   })
 })

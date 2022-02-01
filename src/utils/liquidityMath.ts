@@ -1,4 +1,4 @@
-import JSBI from 'jsbi'
+import { BigInteger } from 'big-integer'
 import { NEGATIVE_ONE, ZERO } from '../internalConstants'
 
 export abstract class LiquidityMath {
@@ -7,11 +7,11 @@ export abstract class LiquidityMath {
    */
   private constructor() {}
 
-  public static addDelta(x: JSBI, y: JSBI): JSBI {
-    if (JSBI.lessThan(y, ZERO)) {
-      return JSBI.subtract(x, JSBI.multiply(y, NEGATIVE_ONE))
+  public static addDelta(x: BigInteger, y: BigInteger): BigInteger {
+    if (y.lesser(ZERO)) {
+      return x.subtract(y.multiply(NEGATIVE_ONE))
     } else {
-      return JSBI.add(x, y)
+      return x.add(y)
     }
   }
 }

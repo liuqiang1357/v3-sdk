@@ -1,7 +1,7 @@
-import JSBI from 'jsbi'
+import { BigInteger } from 'big-integer'
 import { Interface } from '@ethersproject/abi'
 import json from '@uniswap/v3-periphery/artifacts/contracts/interfaces/IPeripheryPaymentsWithFee.sol/IPeripheryPaymentsWithFee.json'
-import { Percent, Token, validateAndParseAddress } from '@uniswap/sdk-core'
+import { Percent, Token, validateAndParseAddress } from '@liuqiang1357/uniswap-sdk-core'
 import { toHex } from './utils/calldata'
 
 export interface FeeOptions {
@@ -28,7 +28,7 @@ export abstract class Payments {
     return toHex(fee.multiply(10_000).quotient)
   }
 
-  public static encodeUnwrapWETH9(amountMinimum: JSBI, recipient: string, feeOptions?: FeeOptions): string {
+  public static encodeUnwrapWETH9(amountMinimum: BigInteger, recipient: string, feeOptions?: FeeOptions): string {
     recipient = validateAndParseAddress(recipient)
 
     if (!!feeOptions) {
@@ -48,7 +48,7 @@ export abstract class Payments {
 
   public static encodeSweepToken(
     token: Token,
-    amountMinimum: JSBI,
+    amountMinimum: BigInteger,
     recipient: string,
     feeOptions?: FeeOptions
   ): string {

@@ -1,5 +1,5 @@
-import JSBI from 'jsbi'
-import { CurrencyAmount, Ether, Percent, Token, TradeType, WETH9 } from '@uniswap/sdk-core'
+import bigInt from 'big-integer'
+import { CurrencyAmount, Ether, Percent, Token, TradeType, WETH9 } from '@liuqiang1357/uniswap-sdk-core'
 import { FeeAmount, TICK_SPACINGS } from './constants'
 import { Pool } from './entities/pool'
 import { SwapRouter } from './swapRouter'
@@ -202,7 +202,7 @@ describe('SwapRouter', () => {
           slippageTolerance,
           recipient,
           deadline,
-          sqrtPriceLimitX96: JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(128))
+          sqrtPriceLimitX96: bigInt(2).pow(bigInt(128))
         })
 
         expect(calldata).toBe(
@@ -590,7 +590,7 @@ describe('SwapRouter', () => {
         slippageTolerance,
         recipient,
         deadline,
-        sqrtPriceLimitX96: JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(128))
+        sqrtPriceLimitX96: bigInt(2).pow(bigInt(128))
       })
 
       expect(calldata).toBe(

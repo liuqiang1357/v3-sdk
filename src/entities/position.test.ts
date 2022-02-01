@@ -1,5 +1,5 @@
-import { Percent, Token } from '@uniswap/sdk-core'
-import JSBI from 'jsbi'
+import { Percent, Token } from '@liuqiang1357/uniswap-sdk-core'
+import bigInt from 'big-integer'
 import { FeeAmount, TICK_SPACINGS } from '../constants'
 import { encodeSqrtRatioX96 } from '../utils/encodeSqrtRatioX96'
 import { nearestUsableTick } from '../utils/nearestUsableTick'
@@ -22,7 +22,7 @@ describe('Position', () => {
       tickLower: -10,
       tickUpper: 10
     })
-    expect(position.liquidity).toEqual(JSBI.BigInt(1))
+    expect(position.liquidity).toEqual(bigInt(1))
   })
 
   it('can use min and max ticks', () => {
@@ -32,7 +32,7 @@ describe('Position', () => {
       tickLower: nearestUsableTick(TickMath.MIN_TICK, TICK_SPACING),
       tickUpper: nearestUsableTick(TickMath.MAX_TICK, TICK_SPACING)
     })
-    expect(position.liquidity).toEqual(JSBI.BigInt(1))
+    expect(position.liquidity).toEqual(bigInt(1))
   })
 
   it('tick lower must be less than tick upper', () => {
@@ -282,7 +282,7 @@ describe('Position', () => {
             DAI,
             USDC,
             FeeAmount.LOW,
-            JSBI.subtract(TickMath.MAX_SQRT_RATIO, JSBI.BigInt(1)),
+            TickMath.MAX_SQRT_RATIO.subtract(bigInt(1)),
             0,
             TickMath.MAX_TICK - 1,
             []
@@ -405,7 +405,7 @@ describe('Position', () => {
             DAI,
             USDC,
             FeeAmount.LOW,
-            JSBI.subtract(TickMath.MAX_SQRT_RATIO, JSBI.BigInt(1)),
+            TickMath.MAX_SQRT_RATIO.subtract(bigInt(1)),
             0,
             TickMath.MAX_TICK - 1,
             []

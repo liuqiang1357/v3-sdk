@@ -1,5 +1,5 @@
-import { BigintIsh } from '@uniswap/sdk-core'
-import JSBI from 'jsbi'
+import { BigintIsh } from '@liuqiang1357/uniswap-sdk-core'
+import bigInt from 'big-integer'
 
 /**
  * Generated method parameters for executing a call.
@@ -21,8 +21,8 @@ export interface MethodParameters {
  * @returns The hex encoded calldata
  */
 export function toHex(bigintIsh: BigintIsh) {
-  const bigInt = JSBI.BigInt(bigintIsh)
-  let hex = bigInt.toString(16)
+  const bigint = bigInt(bigintIsh)
+  let hex = bigint.toString(16)
   if (hex.length % 2 !== 0) {
     hex = `0${hex}`
   }

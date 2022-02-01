@@ -1,5 +1,5 @@
 import { Interface } from '@ethersproject/abi'
-import { BigintIsh, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { BigintIsh, Currency, CurrencyAmount, TradeType } from '@liuqiang1357/uniswap-sdk-core'
 import { encodeRouteToPath } from './utils'
 import { MethodParameters, toHex } from './utils/calldata'
 import json from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'

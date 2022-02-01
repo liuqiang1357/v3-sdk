@@ -1,4 +1,4 @@
-import { BigintIsh, Token, validateAndParseAddress } from '@uniswap/sdk-core'
+import { BigintIsh, Token, validateAndParseAddress } from '@liuqiang1357/uniswap-sdk-core'
 import { MethodParameters, toHex } from './utils/calldata'
 import { defaultAbiCoder, Interface } from '@ethersproject/abi'
 import json from '@uniswap/v3-staker/artifacts/contracts/UniswapV3Staker.sol/UniswapV3Staker.json'

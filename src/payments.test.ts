@@ -1,9 +1,9 @@
-import { Percent, Token } from '@uniswap/sdk-core'
-import JSBI from 'jsbi'
+import { Percent, Token } from '@liuqiang1357/uniswap-sdk-core'
+import bigInt from 'big-integer'
 import { Payments } from './payments'
 
 const recipient = '0x0000000000000000000000000000000000000003'
-const amount = JSBI.BigInt(123)
+const amount = bigInt(123)
 
 const feeOptions = {
   fee: new Percent(1, 1000),

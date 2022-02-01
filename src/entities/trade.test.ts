@@ -1,5 +1,5 @@
-import { CurrencyAmount, Ether, Percent, Price, sqrt, Token, TradeType, WETH9 } from '@uniswap/sdk-core'
-import JSBI from 'jsbi'
+import { CurrencyAmount, Ether, Percent, Price, sqrt, Token, TradeType, WETH9 } from '@liuqiang1357/uniswap-sdk-core'
+import bigInt from 'big-integer'
 import { FeeAmount, TICK_SPACINGS } from '../constants'
 import { encodeSqrtRatioX96 } from '../utils/encodeSqrtRatioX96'
 import { nearestUsableTick } from '../utils/nearestUsableTick'
@@ -21,7 +21,7 @@ describe('Trade', () => {
     feeAmount: FeeAmount = FeeAmount.MEDIUM
   ) {
     const sqrtRatioX96 = encodeSqrtRatioX96(reserve1.quotient, reserve0.quotient)
-    const liquidity = sqrt(JSBI.multiply(reserve0.quotient, reserve1.quotient))
+    const liquidity = sqrt(reserve0.quotient.multiply(reserve1.quotient))
     return new Pool(
       reserve0.currency,
       reserve1.currency,
@@ -37,7 +37,7 @@ describe('Trade', () => {
         },
         {
           index: nearestUsableTick(TickMath.MAX_TICK, TICK_SPACINGS[feeAmount]),
-          liquidityNet: JSBI.multiply(liquidity, JSBI.BigInt(-1)),
+          liquidityNet: liquidity.multiply(bigInt(-1)),
           liquidityGross: liquidity
         }
       ]
@@ -66,25 +66,25 @@ describe('Trade', () => {
   )
 
   const pool_weth_0 = v2StylePool(
-    CurrencyAmount.fromRawAmount(WETH9[1], JSBI.BigInt(100000)),
-    CurrencyAmount.fromRawAmount(token0, JSBI.BigInt(100000))
+    CurrencyAmount.fromRawAmount(WETH9[1], bigInt(100000)),
+    CurrencyAmount.fromRawAmount(token0, bigInt(100000))
   )
 
   const pool_weth_1 = v2StylePool(
-    CurrencyAmount.fromRawAmount(WETH9[1], JSBI.BigInt(100000)),
-    CurrencyAmount.fromRawAmount(token1, JSBI.BigInt(100000))
+    CurrencyAmount.fromRawAmount(WETH9[1], bigInt(100000)),
+    CurrencyAmount.fromRawAmount(token1, bigInt(100000))
   )
 
   const pool_weth_2 = v2StylePool(
-    CurrencyAmount.fromRawAmount(WETH9[1], JSBI.BigInt(100000)),
-    CurrencyAmount.fromRawAmount(token2, JSBI.BigInt(100000))
+    CurrencyAmount.fromRawAmount(WETH9[1], bigInt(100000)),
+    CurrencyAmount.fromRawAmount(token2, bigInt(100000))
   )
 
   describe('#fromRoute', () => {
     it('can be constructed with ETHER as input', async () => {
       const trade = await Trade.fromRoute(
         new Route([pool_weth_0], ETHER, token0),
-        CurrencyAmount.fromRawAmount(Ether.onChain(1), JSBI.BigInt(10000)),
+        CurrencyAmount.fromRawAmount(Ether.onChain(1), bigInt(10000)),
         TradeType.EXACT_INPUT
       )
       expect(trade.inputAmount.currency).toEqual(ETHER)
@@ -93,7 +93,7 @@ describe('Trade', () => {
     it('can be constructed with ETHER as input for exact output', async () => {
       const trade = await Trade.fromRoute(
         new Route([pool_weth_0], ETHER, token0),
-        CurrencyAmount.fromRawAmount(token0, JSBI.BigInt(10000)),
+        CurrencyAmount.fromRawAmount(token0, bigInt(10000)),
         TradeType.EXACT_OUTPUT
       )
       expect(trade.inputAmount.currency).toEqual(ETHER)
@@ -103,7 +103,7 @@ describe('Trade', () => {
     it('can be constructed with ETHER as output', async () => {
       const trade = await Trade.fromRoute(
         new Route([pool_weth_0], token0, ETHER),
-        CurrencyAmount.fromRawAmount(Ether.onChain(1), JSBI.BigInt(10000)),
+        CurrencyAmount.fromRawAmount(Ether.onChain(1), bigInt(10000)),
         TradeType.EXACT_OUTPUT
       )
       expect(trade.inputAmount.currency).toEqual(token0)
@@ -112,7 +112,7 @@ describe('Trade', () => {
     it('can be constructed with ETHER as output for exact input', async () => {
       const trade = await Trade.fromRoute(
         new Route([pool_weth_0], token0, ETHER),
-        CurrencyAmount.fromRawAmount(token0, JSBI.BigInt(10000)),
+        CurrencyAmount.fromRawAmount(token0, bigInt(10000)),
         TradeType.EXACT_INPUT
       )
       expect(trade.inputAmount.currency).toEqual(token0)
@@ -125,7 +125,7 @@ describe('Trade', () => {
       const trade = await Trade.fromRoutes<Ether, Token, TradeType.EXACT_INPUT>(
         [
           {
-            amount: CurrencyAmount.fromRawAmount(Ether.onChain(1), JSBI.BigInt(10000)),
+            amount: CurrencyAmount.fromRawAmount(Ether.onChain(1), bigInt(10000)),
             route: new Route([pool_weth_0], ETHER, token0)
           }
         ],
@@ -139,11 +139,11 @@ describe('Trade', () => {
       const trade = await Trade.fromRoutes<Ether, Token, TradeType.EXACT_OUTPUT>(
         [
           {
-            amount: CurrencyAmount.fromRawAmount(token0, JSBI.BigInt(3000)),
+            amount: CurrencyAmount.fromRawAmount(token0, bigInt(3000)),
             route: new Route([pool_weth_0], ETHER, token0)
           },
           {
-            amount: CurrencyAmount.fromRawAmount(token0, JSBI.BigInt(7000)),
+            amount: CurrencyAmount.fromRawAmount(token0, bigInt(7000)),
             route: new Route([pool_weth_1, pool_0_1], ETHER, token0)
           }
         ],
@@ -157,11 +157,11 @@ describe('Trade', () => {
       const trade = await Trade.fromRoutes<Token, Ether, TradeType.EXACT_OUTPUT>(
         [
           {
-            amount: CurrencyAmount.fromRawAmount(Ether.onChain(1), JSBI.BigInt(4000)),
+            amount: CurrencyAmount.fromRawAmount(Ether.onChain(1), bigInt(4000)),
             route: new Route([pool_weth_0], token0, ETHER)
           },
           {
-            amount: CurrencyAmount.fromRawAmount(Ether.onChain(1), JSBI.BigInt(6000)),
+            amount: CurrencyAmount.fromRawAmount(Ether.onChain(1), bigInt(6000)),
             route: new Route([pool_0_1, pool_weth_1], token0, ETHER)
           }
         ],
@@ -174,11 +174,11 @@ describe('Trade', () => {
       const trade = await Trade.fromRoutes<Token, Ether, TradeType.EXACT_INPUT>(
         [
           {
-            amount: CurrencyAmount.fromRawAmount(token0, JSBI.BigInt(3000)),
+            amount: CurrencyAmount.fromRawAmount(token0, bigInt(3000)),
             route: new Route([pool_weth_0], token0, ETHER)
           },
           {
-            amount: CurrencyAmount.fromRawAmount(token0, JSBI.BigInt(7000)),
+            amount: CurrencyAmount.fromRawAmount(token0, bigInt(7000)),
             route: new Route([pool_0_1, pool_weth_1], token0, ETHER)
           }
         ],
@@ -193,11 +193,11 @@ describe('Trade', () => {
         Trade.fromRoutes<Token, Ether, TradeType.EXACT_INPUT>(
           [
             {
-              amount: CurrencyAmount.fromRawAmount(token0, JSBI.BigInt(4500)),
+              amount: CurrencyAmount.fromRawAmount(token0, bigInt(4500)),
               route: new Route([pool_0_1, pool_weth_1], token0, ETHER)
             },
             {
-              amount: CurrencyAmount.fromRawAmount(token0, JSBI.BigInt(5500)),
+              amount: CurrencyAmount.fromRawAmount(token0, bigInt(5500)),
               route: new Route([pool_0_1, pool_1_2, pool_weth_2], token0, ETHER)
             }
           ],
@@ -539,12 +539,12 @@ describe('Trade', () => {
   describe('#bestTradeExactIn', () => {
     it('throws with empty pools', async () => {
       await expect(
-        Trade.bestTradeExactIn([], CurrencyAmount.fromRawAmount(token0, JSBI.BigInt(10000)), token2)
+        Trade.bestTradeExactIn([], CurrencyAmount.fromRawAmount(token0, bigInt(10000)), token2)
       ).rejects.toThrow('POOLS')
     })
     it('throws with max hops of 0', async () => {
       await expect(
-        Trade.bestTradeExactIn([pool_0_2], CurrencyAmount.fromRawAmount(token0, JSBI.BigInt(10000)), token2, {
+        Trade.bestTradeExactIn([pool_0_2], CurrencyAmount.fromRawAmount(token0, bigInt(10000)), token2, {
           maxHops: 0
         })
       ).rejects.toThrow('MAX_HOPS')
@@ -559,18 +559,18 @@ describe('Trade', () => {
       expect(result).toHaveLength(2)
       expect(result[0].swaps[0].route.pools).toHaveLength(1) // 0 -> 2 at 10:11
       expect(result[0].swaps[0].route.tokenPath).toEqual([token0, token2])
-      expect(result[0].inputAmount.equalTo(CurrencyAmount.fromRawAmount(token0, JSBI.BigInt(10000)))).toBeTruthy()
-      expect(result[0].outputAmount.equalTo(CurrencyAmount.fromRawAmount(token2, JSBI.BigInt(9971)))).toBeTruthy()
+      expect(result[0].inputAmount.equalTo(CurrencyAmount.fromRawAmount(token0, bigInt(10000)))).toBeTruthy()
+      expect(result[0].outputAmount.equalTo(CurrencyAmount.fromRawAmount(token2, bigInt(9971)))).toBeTruthy()
       expect(result[1].swaps[0].route.pools).toHaveLength(2) // 0 -> 1 -> 2 at 12:12:10
       expect(result[1].swaps[0].route.tokenPath).toEqual([token0, token1, token2])
-      expect(result[1].inputAmount.equalTo(CurrencyAmount.fromRawAmount(token0, JSBI.BigInt(10000)))).toBeTruthy()
-      expect(result[1].outputAmount.equalTo(CurrencyAmount.fromRawAmount(token2, JSBI.BigInt(7004)))).toBeTruthy()
+      expect(result[1].inputAmount.equalTo(CurrencyAmount.fromRawAmount(token0, bigInt(10000)))).toBeTruthy()
+      expect(result[1].outputAmount.equalTo(CurrencyAmount.fromRawAmount(token2, bigInt(7004)))).toBeTruthy()
     })
 
     it('respects maxHops', async () => {
       const result = await Trade.bestTradeExactIn(
         [pool_0_1, pool_0_2, pool_1_2],
-        CurrencyAmount.fromRawAmount(token0, JSBI.BigInt(10)),
+        CurrencyAmount.fromRawAmount(token0, bigInt(10)),
         token2,
         { maxHops: 1 }
       )
@@ -594,7 +594,7 @@ describe('Trade', () => {
     it('respects n', async () => {
       const result = await Trade.bestTradeExactIn(
         [pool_0_1, pool_0_2, pool_1_2],
-        CurrencyAmount.fromRawAmount(token0, JSBI.BigInt(10)),
+        CurrencyAmount.fromRawAmount(token0, bigInt(10)),
         token2,
         { maxNumResults: 1 }
       )
@@ -605,7 +605,7 @@ describe('Trade', () => {
     it('no path', async () => {
       const result = await Trade.bestTradeExactIn(
         [pool_0_1, pool_0_3, pool_1_3],
-        CurrencyAmount.fromRawAmount(token0, JSBI.BigInt(10)),
+        CurrencyAmount.fromRawAmount(token0, bigInt(10)),
         token2
       )
       expect(result).toHaveLength(0)
@@ -614,7 +614,7 @@ describe('Trade', () => {
     it('works for ETHER currency input', async () => {
       const result = await Trade.bestTradeExactIn(
         [pool_weth_0, pool_0_1, pool_0_3, pool_1_3],
-        CurrencyAmount.fromRawAmount(Ether.onChain(1), JSBI.BigInt(100)),
+        CurrencyAmount.fromRawAmount(Ether.onChain(1), bigInt(100)),
         token3
       )
       expect(result).toHaveLength(2)
@@ -629,7 +629,7 @@ describe('Trade', () => {
     it('works for ETHER currency output', async () => {
       const result = await Trade.bestTradeExactIn(
         [pool_weth_0, pool_0_1, pool_0_3, pool_1_3],
-        CurrencyAmount.fromRawAmount(token3, JSBI.BigInt(100)),
+        CurrencyAmount.fromRawAmount(token3, bigInt(100)),
         ETHER
       )
       expect(result).toHaveLength(2)
@@ -648,33 +648,31 @@ describe('Trade', () => {
       beforeEach(async () => {
         exactIn = await Trade.fromRoute(
           new Route([pool_0_1, pool_1_2], token0, token2),
-          CurrencyAmount.fromRawAmount(token0, JSBI.BigInt(100)),
+          CurrencyAmount.fromRawAmount(token0, bigInt(100)),
           TradeType.EXACT_INPUT
         )
       })
       it('throws if less than 0', () => {
-        expect(() => exactIn.maximumAmountIn(new Percent(JSBI.BigInt(-1), JSBI.BigInt(100)))).toThrow(
-          'SLIPPAGE_TOLERANCE'
-        )
+        expect(() => exactIn.maximumAmountIn(new Percent(bigInt(-1), bigInt(100)))).toThrow('SLIPPAGE_TOLERANCE')
       })
       it('returns exact if 0', () => {
-        expect(exactIn.maximumAmountIn(new Percent(JSBI.BigInt(0), JSBI.BigInt(100)))).toEqual(exactIn.inputAmount)
+        expect(exactIn.maximumAmountIn(new Percent(bigInt(0), bigInt(100)))).toEqual(exactIn.inputAmount)
       })
       it('returns exact if nonzero', () => {
         expect(
           exactIn
-            .maximumAmountIn(new Percent(JSBI.BigInt(0), JSBI.BigInt(100)))
-            .equalTo(CurrencyAmount.fromRawAmount(token0, JSBI.BigInt(100)))
+            .maximumAmountIn(new Percent(bigInt(0), bigInt(100)))
+            .equalTo(CurrencyAmount.fromRawAmount(token0, bigInt(100)))
         ).toBeTruthy()
         expect(
           exactIn
-            .maximumAmountIn(new Percent(JSBI.BigInt(5), JSBI.BigInt(100)))
-            .equalTo(CurrencyAmount.fromRawAmount(token0, JSBI.BigInt(100)))
+            .maximumAmountIn(new Percent(bigInt(5), bigInt(100)))
+            .equalTo(CurrencyAmount.fromRawAmount(token0, bigInt(100)))
         ).toBeTruthy()
         expect(
           exactIn
-            .maximumAmountIn(new Percent(JSBI.BigInt(200), JSBI.BigInt(100)))
-            .equalTo(CurrencyAmount.fromRawAmount(token0, JSBI.BigInt(100)))
+            .maximumAmountIn(new Percent(bigInt(200), bigInt(100)))
+            .equalTo(CurrencyAmount.fromRawAmount(token0, bigInt(100)))
         ).toBeTruthy()
       })
     })
@@ -690,27 +688,25 @@ describe('Trade', () => {
       })
 
       it('throws if less than 0', () => {
-        expect(() => exactOut.maximumAmountIn(new Percent(JSBI.BigInt(-1), 10000))).toThrow('SLIPPAGE_TOLERANCE')
+        expect(() => exactOut.maximumAmountIn(new Percent(bigInt(-1), 10000))).toThrow('SLIPPAGE_TOLERANCE')
       })
 
       it('returns exact if 0', () => {
-        expect(exactOut.maximumAmountIn(new Percent(JSBI.BigInt(0), 10000))).toEqual(exactOut.inputAmount)
+        expect(exactOut.maximumAmountIn(new Percent(bigInt(0), 10000))).toEqual(exactOut.inputAmount)
       })
 
       it('returns slippage amount if nonzero', () => {
         expect(
-          exactOut
-            .maximumAmountIn(new Percent(JSBI.BigInt(0), 100))
-            .equalTo(CurrencyAmount.fromRawAmount(token0, 15488))
+          exactOut.maximumAmountIn(new Percent(bigInt(0), 100)).equalTo(CurrencyAmount.fromRawAmount(token0, 15488))
         ).toBeTruthy()
         expect(
           exactOut
-            .maximumAmountIn(new Percent(JSBI.BigInt(5), JSBI.BigInt(100)))
+            .maximumAmountIn(new Percent(bigInt(5), bigInt(100)))
             .equalTo(CurrencyAmount.fromRawAmount(token0, 16262))
         ).toBeTruthy()
         expect(
           exactOut
-            .maximumAmountIn(new Percent(JSBI.BigInt(200), JSBI.BigInt(100)))
+            .maximumAmountIn(new Percent(bigInt(200), bigInt(100)))
             .equalTo(CurrencyAmount.fromRawAmount(token0, 46464))
         ).toBeTruthy()
       })
@@ -730,21 +726,21 @@ describe('Trade', () => {
       )
 
       it('throws if less than 0', () => {
-        expect(() => exactIn.minimumAmountOut(new Percent(JSBI.BigInt(-1), 100))).toThrow('SLIPPAGE_TOLERANCE')
+        expect(() => exactIn.minimumAmountOut(new Percent(bigInt(-1), 100))).toThrow('SLIPPAGE_TOLERANCE')
       })
 
       it('returns exact if 0', () => {
-        expect(exactIn.minimumAmountOut(new Percent(JSBI.BigInt(0), 10000))).toEqual(exactIn.outputAmount)
+        expect(exactIn.minimumAmountOut(new Percent(bigInt(0), 10000))).toEqual(exactIn.outputAmount)
       })
 
       it('returns exact if nonzero', () => {
-        expect(exactIn.minimumAmountOut(new Percent(JSBI.BigInt(0), 100))).toEqual(
+        expect(exactIn.minimumAmountOut(new Percent(bigInt(0), 100))).toEqual(
           CurrencyAmount.fromRawAmount(token2, 7004)
         )
-        expect(exactIn.minimumAmountOut(new Percent(JSBI.BigInt(5), 100))).toEqual(
+        expect(exactIn.minimumAmountOut(new Percent(bigInt(5), 100))).toEqual(
           CurrencyAmount.fromRawAmount(token2, 6670)
         )
-        expect(exactIn.minimumAmountOut(new Percent(JSBI.BigInt(200), 100))).toEqual(
+        expect(exactIn.minimumAmountOut(new Percent(bigInt(200), 100))).toEqual(
           CurrencyAmount.fromRawAmount(token2, 2334)
         )
       })
@@ -754,34 +750,32 @@ describe('Trade', () => {
       beforeEach(async () => {
         exactOut = await Trade.fromRoute(
           new Route([pool_0_1, pool_1_2], token0, token2),
-          CurrencyAmount.fromRawAmount(token2, JSBI.BigInt(100)),
+          CurrencyAmount.fromRawAmount(token2, bigInt(100)),
           TradeType.EXACT_OUTPUT
         )
       })
 
       it('throws if less than 0', () => {
-        expect(() => exactOut.minimumAmountOut(new Percent(JSBI.BigInt(-1), JSBI.BigInt(100)))).toThrow(
-          'SLIPPAGE_TOLERANCE'
-        )
+        expect(() => exactOut.minimumAmountOut(new Percent(bigInt(-1), bigInt(100)))).toThrow('SLIPPAGE_TOLERANCE')
       })
       it('returns exact if 0', () => {
-        expect(exactOut.minimumAmountOut(new Percent(JSBI.BigInt(0), JSBI.BigInt(100)))).toEqual(exactOut.outputAmount)
+        expect(exactOut.minimumAmountOut(new Percent(bigInt(0), bigInt(100)))).toEqual(exactOut.outputAmount)
       })
       it('returns slippage amount if nonzero', () => {
         expect(
           exactOut
-            .minimumAmountOut(new Percent(JSBI.BigInt(0), JSBI.BigInt(100)))
-            .equalTo(CurrencyAmount.fromRawAmount(token2, JSBI.BigInt(100)))
+            .minimumAmountOut(new Percent(bigInt(0), bigInt(100)))
+            .equalTo(CurrencyAmount.fromRawAmount(token2, bigInt(100)))
         ).toBeTruthy()
         expect(
           exactOut
-            .minimumAmountOut(new Percent(JSBI.BigInt(5), JSBI.BigInt(100)))
-            .equalTo(CurrencyAmount.fromRawAmount(token2, JSBI.BigInt(100)))
+            .minimumAmountOut(new Percent(bigInt(5), bigInt(100)))
+            .equalTo(CurrencyAmount.fromRawAmount(token2, bigInt(100)))
         ).toBeTruthy()
         expect(
           exactOut
-            .minimumAmountOut(new Percent(JSBI.BigInt(200), JSBI.BigInt(100)))
-            .equalTo(CurrencyAmount.fromRawAmount(token2, JSBI.BigInt(100)))
+            .minimumAmountOut(new Percent(bigInt(200), bigInt(100)))
+            .equalTo(CurrencyAmount.fromRawAmount(token2, bigInt(100)))
         ).toBeTruthy()
       })
     })
@@ -790,12 +784,12 @@ describe('Trade', () => {
   describe('#bestTradeExactOut', () => {
     it('throws with empty pools', async () => {
       await expect(
-        Trade.bestTradeExactOut([], token0, CurrencyAmount.fromRawAmount(token2, JSBI.BigInt(100)))
+        Trade.bestTradeExactOut([], token0, CurrencyAmount.fromRawAmount(token2, bigInt(100)))
       ).rejects.toThrow('POOLS')
     })
     it('throws with max hops of 0', async () => {
       await expect(
-        Trade.bestTradeExactOut([pool_0_2], token0, CurrencyAmount.fromRawAmount(token2, JSBI.BigInt(100)), {
+        Trade.bestTradeExactOut([pool_0_2], token0, CurrencyAmount.fromRawAmount(token2, bigInt(100)), {
           maxHops: 0
         })
       ).rejects.toThrow('MAX_HOPS')
@@ -822,7 +816,7 @@ describe('Trade', () => {
       const result = await Trade.bestTradeExactOut(
         [pool_0_1, pool_0_2, pool_1_2],
         token0,
-        CurrencyAmount.fromRawAmount(token2, JSBI.BigInt(10)),
+        CurrencyAmount.fromRawAmount(token2, bigInt(10)),
         { maxHops: 1 }
       )
       expect(result).toHaveLength(1)
@@ -843,7 +837,7 @@ describe('Trade', () => {
       const result = Trade.bestTradeExactOut(
         [pool_0_1, pool_0_2, pool_1_2],
         token0,
-        CurrencyAmount.fromRawAmount(token2, JSBI.BigInt(1050))
+        CurrencyAmount.fromRawAmount(token2, bigInt(1050))
       )
       expect(result).toHaveLength(1)
     })
@@ -852,7 +846,7 @@ describe('Trade', () => {
       const result = await Trade.bestTradeExactOut(
         [pool_0_1, pool_0_2, pool_1_2],
         token0,
-        CurrencyAmount.fromRawAmount(token2, JSBI.BigInt(10)),
+        CurrencyAmount.fromRawAmount(token2, bigInt(10)),
         { maxNumResults: 1 }
       )
 
@@ -863,7 +857,7 @@ describe('Trade', () => {
       const result = await Trade.bestTradeExactOut(
         [pool_0_1, pool_0_3, pool_1_3],
         token0,
-        CurrencyAmount.fromRawAmount(token2, JSBI.BigInt(10))
+        CurrencyAmount.fromRawAmount(token2, bigInt(10))
       )
       expect(result).toHaveLength(0)
     })
@@ -886,7 +880,7 @@ describe('Trade', () => {
       const result = await Trade.bestTradeExactOut(
         [pool_weth_0, pool_0_1, pool_0_3, pool_1_3],
         token3,
-        CurrencyAmount.fromRawAmount(Ether.onChain(1), JSBI.BigInt(100))
+        CurrencyAmount.fromRawAmount(Ether.onChain(1), bigInt(100))
       )
       expect(result).toHaveLength(2)
       expect(result[0].inputAmount.currency).toEqual(token3)

@@ -1,5 +1,5 @@
-import JSBI from 'jsbi'
-import { CurrencyAmount, Token, TradeType, WETH9 } from '@uniswap/sdk-core'
+import bigInt from 'big-integer'
+import { CurrencyAmount, Token, TradeType, WETH9 } from '@liuqiang1357/uniswap-sdk-core'
 import { FeeAmount, TICK_SPACINGS } from './constants'
 import { Pool } from './entities/pool'
 import { SwapQuoter } from './quoter'
@@ -106,7 +106,7 @@ describe('SwapQuoter', () => {
           TradeType.EXACT_INPUT
         )
         const { calldata, value } = SwapQuoter.quoteCallParameters(trade.route, trade.inputAmount, trade.tradeType, {
-          sqrtPriceLimitX96: JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(128))
+          sqrtPriceLimitX96: bigInt(2).pow(bigInt(128))
         })
 
         expect(calldata).toBe(

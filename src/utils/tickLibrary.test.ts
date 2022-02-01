@@ -1,4 +1,4 @@
-import JSBI from 'jsbi'
+import bigInt from 'big-integer'
 import { ZERO } from '../internalConstants'
 import { TickLibrary } from './tickLibrary'
 
@@ -37,18 +37,18 @@ describe('TickLibrary', () => {
         -1,
         1,
         0,
-        JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(128)),
-        JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(128))
+        bigInt(2).pow(bigInt(128)),
+        bigInt(2).pow(bigInt(128))
       )
-      expect(feeGrowthInside0X128).toEqual(JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(128)))
-      expect(feeGrowthInside1X128).toEqual(JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(128)))
+      expect(feeGrowthInside0X128).toEqual(bigInt(2).pow(bigInt(128)))
+      expect(feeGrowthInside1X128).toEqual(bigInt(2).pow(bigInt(128)))
     })
 
     it('non-0, all outside', () => {
       const [feeGrowthInside0X128, feeGrowthInside1X128] = TickLibrary.getFeeGrowthInside(
         {
-          feeGrowthOutside0X128: JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(128)),
-          feeGrowthOutside1X128: JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(128))
+          feeGrowthOutside0X128: bigInt(2).pow(bigInt(128)),
+          feeGrowthOutside1X128: bigInt(2).pow(bigInt(128))
         },
         {
           feeGrowthOutside0X128: ZERO,
@@ -57,8 +57,8 @@ describe('TickLibrary', () => {
         -1,
         1,
         0,
-        JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(128)),
-        JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(128))
+        bigInt(2).pow(bigInt(128)),
+        bigInt(2).pow(bigInt(128))
       )
       expect(feeGrowthInside0X128).toEqual(ZERO)
       expect(feeGrowthInside1X128).toEqual(ZERO)
@@ -67,8 +67,8 @@ describe('TickLibrary', () => {
     it('non-0, some outside', () => {
       const [feeGrowthInside0X128, feeGrowthInside1X128] = TickLibrary.getFeeGrowthInside(
         {
-          feeGrowthOutside0X128: JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(127)),
-          feeGrowthOutside1X128: JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(127))
+          feeGrowthOutside0X128: bigInt(2).pow(bigInt(127)),
+          feeGrowthOutside1X128: bigInt(2).pow(bigInt(127))
         },
         {
           feeGrowthOutside0X128: ZERO,
@@ -77,11 +77,11 @@ describe('TickLibrary', () => {
         -1,
         1,
         0,
-        JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(128)),
-        JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(128))
+        bigInt(2).pow(bigInt(128)),
+        bigInt(2).pow(bigInt(128))
       )
-      expect(feeGrowthInside0X128).toEqual(JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(127)))
-      expect(feeGrowthInside1X128).toEqual(JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(127)))
+      expect(feeGrowthInside0X128).toEqual(bigInt(2).pow(bigInt(127)))
+      expect(feeGrowthInside1X128).toEqual(bigInt(2).pow(bigInt(127)))
     })
   })
 })
