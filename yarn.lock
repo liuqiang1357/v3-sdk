@@ -1261,10 +1261,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@liuqiang1357/uniswap-sdk-core@^3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@liuqiang1357/uniswap-sdk-core/-/uniswap-sdk-core-3.0.2.tgz#39fdb717e3b9698d6e2e10b6b98af0787c5f5831"
-  integrity sha512-h9WapYZ1hql1BdkPLfqIkeuIcgTdUFheo0ZRQsRaUXhQMtlq6PjgqtN9Y6k4h86lbeuHgvCsnocoTQB84pc6Fg==
+"@liuqiang1357/uniswap-sdk-core@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@liuqiang1357/uniswap-sdk-core/-/uniswap-sdk-core-3.0.3.tgz#22fa20abc6a92fc505e7d46c47dae63b527782b2"
+  integrity sha512-YnEtucoPkM7SskPw+C6zKSlpEdZgeRjE1Jl/pvMR9KgGhlpLvEeQwHbjSjoWGnZSoJyuEJryZruacpFGfJVWvA==
   dependencies:
     "@ethersproject/address" "^5.0.2"
     big-integer "^1.6.51"
